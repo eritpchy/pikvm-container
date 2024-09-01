@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+
+TRANSCODER_PID=0
+
+stop_transcoder() {
+  if [ $TRANSCODER_PID -ne 0 ]; then
+    echo "Stopping transcoder with PID $TRANSCODER_PID..."
+    pkill -9 -P $$
+    kill -9 $TRANSCODER_PID
+    echo "transcoder stopped"
+  fi
+}
+
+/usr/share/kvmd/stream.sh &
+HTTP_SERVER_PID=$!
+
+trap stop_transcoder EXIT
+
+/usr/bin/ustreamer "$@"

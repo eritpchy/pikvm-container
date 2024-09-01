@@ -63,7 +63,7 @@ ADD root/pifs /pifs
 ADD root/init /init
 ADD root/supervisord.conf /supervisord.conf
 RUN chmod +x /usr/local/bin/* && \
-    chmod +x /usr/bin/vcgencmd && \
+    chmod +x /usr/bin/* && \
     chmod +x /usr/share/kvmd/*.sh && \
     chmod +x /init && \
     true
@@ -78,7 +78,7 @@ RUN echo mv --no-clobber /etc/janus/* /etc/kvmd/janus/ && \
 # Workaround for docker non privileged issues
 RUN sed -i '/get_status(self,/a\        return (True, True)' /usr/lib/python3.12/site-packages/kvmd/apps/kvmd/sysunit.py && \
     sed -i '/open(self)/a\        return' /usr/lib/python3.12/site-packages/kvmd/apps/kvmd/sysunit.py  
-RUN systemctl enable kvmd kvmd-nginx kvmd-janus-static kvmd-bootconfig kvmd-certbot kvmd-ipmi kvmd-vnc kvmd-ffmpeg
+RUN systemctl enable kvmd kvmd-nginx kvmd-janus-static kvmd-bootconfig kvmd-certbot kvmd-ipmi kvmd-vnc
 # Require privileged = true 
 # RUN systemctl enable kvmd-watchdog 
 STOPSIGNAL SIGRTMIN+3

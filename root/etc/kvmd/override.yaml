@@ -60,7 +60,8 @@ kvmd:
             - "-c"
             - "/usr/local/bin/video_grabber_disable.sh"
         cmd:
-            - "/usr/bin/ustreamer"
+            # NOT ustreamer !!
+            - "/usr/bin/streamer"
             - "--device=/dev/kvmd/kvmd-video"
             - "--persistent"
             # for mjpeg mode, uncomment below 1 line and comment line 2-3
