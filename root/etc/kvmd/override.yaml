@@ -1,0 +1,90 @@
+###############################################################################
+#                                                                             #
+#  Override KVMD settings.                                                    #
+#                                                                             #
+#    * https://docs.pikvm.org/first_steps/#structure-of-configuration-files   #
+#                                                                             #
+#  This file uses YAML syntax. All overridden parameters will be applied      #
+#  AFTER other configs and "!include" directives, and BEFORE validation.      #
+#  Values should be combined under common sections.                           #
+#                                                                             #
+###############################################################################
+#
+#########
+# Wrong #
+#########
+#kvmd:
+#    gpio:
+#        drivers: ...
+#kvmd:
+#    gpio:
+#        scheme: ...
+#
+###########
+# Correct #
+###########
+#kvmd:
+#    gpio:
+#        drivers: ...
+#        scheme: ...
+#
+###########
+# Example #
+###########
+vnc:
+    auth:
+        vncauth:
+            enabled: true # Enable auth via /etc/kvmd/vncpasswd
+kvmd:
+    hid:
+        type: ch9329
+        speed: 9600
+        read_timeout: 0.3
+        device: /dev/kvmd/kvmd-hid
+    msd:
+        type: disabled
+    atx:
+        type: disabled
+    streamer:
+        forever: false
+        #cmd_append:
+        #    - "--slowdown"      # so target doesn't have to reboot
+        resolution:
+            default: 1920x1080
+        pre_start_cmd: 
+            - "/bin/bash"
+            - "-c"
+            - "/usr/local/bin/video_grabber_enable.sh"
+        post_stop_cmd: 
+            - "/bin/bash"
+            - "-c"
+            - "/usr/local/bin/video_grabber_disable.sh"
+        cmd:
+            - "/usr/bin/ustreamer"
+            - "--device=/dev/kvmd/kvmd-video"
+            - "--persistent"
+            # for mjpeg mode, uncomment below 1 line and comment line 2-3
+            # - "--format=mjpeg"
+            # for hardward h264 streaming only!
+            - "--format=yuyv"
+            # - "--encoder=NOOP"
+            #
+            - "--resolution={resolution}"
+            - "--desired-fps={desired_fps}"
+            - "--drop-same-frames=30"
+            - "--last-as-blank=0"
+            - "--unix={unix}"
+            - "--unix-rm"
+            - "--unix-mode=0660"
+            - "--exit-on-parent-death"
+            - "--process-name-prefix={process_name_prefix}"
+            - "--notify-parent"
+            - "--no-log-colors"
+            # - "--sink=kvmd::ustreamer::jpeg"
+            # - "--sink-mode=0660"
+            - "--raw-sink=kvmd::ustreamer::raw"
+            - "--h264-sink=kvmd::ustreamer::h264"
+            - "--h264-sink-mode=0660"
+            - "--h264-bitrate={h264_bitrate}"
+            - "--h264-gop={h264_gop}"
+

@@ -1,0 +1,19 @@
+[Unit]
+Description=PiKVM - Transcode (Static Config)
+After=network.target network-online.target nss-lookup.target kvmd.service
+
+[Service]
+User=kvmd
+Group=kvmd
+Type=simple
+Restart=on-failure
+RestartSec=3
+AmbientCapabilities=CAP_NET_RAW
+LimitNOFILE=65536
+UMask=0117
+ExecStart=/usr/share/kvmd/stream_when_ustream_exists.sh
+TimeoutStopSec=10
+KillMode=mixed
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,12 @@
+video: {
+    type = "rtp"
+    id = 1
+    description = "H.264 live stream coming from ustreamer"
+    audio = false
+    video = true
+    videoport = 5004
+    videopt = 96
+    videocodec = "h264"
+    videofmtp = "profile-level-id=42e01f;packetization-mode=1"
+    videortpmap = "H264/90000"
+}

@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  pikvm:
+    build: .
+    image: ${PIKVM_IMAGE:-eritpchy/pikvm:latest}
+    container_name: pikvm
+    # privileged: true
+    ports:
+      - "9043:443"
+      - "9080:80"
+      # janus
+      # - 5004:5004
+      # - 5004:5004/udp
+      - 8188:8188
+      - 22222-22444:22222-22444
+      - 22222-22444:22222-22444/udp
+    device_cgroup_rules:
+      - "c ${CAP_MAJOR:-81}:* rmw"
+      - "c ${HID_MAJOR:-188}:* rmw"
+      - "c ${VAAPI_MAJOR:-226}:* rmw"
+    tmpfs:
+      - /tmp
+      - /run
+    volumes:
+      # for systemd
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      # kvmd hardward device
+      - /dev/kvmd:/dev/kvmd
+      # intel vaapi/qsf device
+      - /dev/dri:/dev/dri
+      # usb grabber power switch
+      - /sys/bus/usb/devices/usb2/2-3/authorized:/dev/kvmd-video-authorized
+      # password presistent
+      - ./data/secret:/etc/kvmd/secret
+      # synology cpu temp binding
+      - /sys/class/hwmon/hwmon0/temp1_input:/pifs/sys/class/thermal/thermal_zone0/temp
+    restart: always
+    environment:
+      - DEVICE_GROUP_ID=${DEVICE_GROUP_ID:-937}
+      - DOCKER_HOST_ADDRESS=${DOCKER_HOST_ADDRESS:-0.0.0.0}
+      - USE_SYSTEMD=false
+      - SYSFS_PREFIX=/pifs
+      - PROCFS_PREFIX=/pifs

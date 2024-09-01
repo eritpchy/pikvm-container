@@ -1,0 +1,12 @@
+enabled: true
+external:
+    type: ''
+
+internal:
+    file: /etc/kvmd/secret/htpasswd
+    force_users: []
+    type: htpasswd
+
+totp:
+    secret:
+        file: /etc/kvmd/secret/totp.secret

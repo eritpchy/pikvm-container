@@ -1,0 +1,19 @@
+general: {
+	debug_level = 4
+}
+nat: {
+	nice_debug = false
+	ignore_mdns = true
+	nat_1_1_mapping = "put_your_docker_host_address_here"
+}
+media: {
+	ipv6 = true
+	ipv6_linklocal = true
+	min_nack_queue = 2000
+	rtp_port_range = "22222-22444"
+	no_media_timer = 0
+	slowlink_threshold = 10
+	twcc_period = 100
+	dtls_timeout = 1000
+	nack_optimizations = true
+}

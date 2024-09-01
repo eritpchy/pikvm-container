@@ -1,0 +1,30 @@
+#!/bin/bash
+set -xe
+# Transfer docker envs to systemd
+echo "[Manager]
+DefaultEnvironment=$(for e in $(tr "\000" "\n" < /proc/1/environ); do echo -n "\"$e\" " ; done)
+" >/etc/systemd/system.conf.d/docker_env.conf
+
+# Modify kvmd gid/uid to host video gid/uid, for hardware device access.
+# Such like /dev/video0, /dev/kvmd-hid
+# Device perm must be 0660, and group owner == video, this is done by udev.rules
+KVMD_OLD_GID=$(id -g kvmd)
+groupmod -g ${DEVICE_GROUP_ID} kvmd
+usermod -u ${DEVICE_GROUP_ID} -g ${DEVICE_GROUP_ID} kvmd
+# Fix permission issue, cause by uid/gid changed
+find /etc -group $KVMD_OLD_GID 2>/dev/null | xargs -I{} chown -Rv kvmd:kvmd {}
+chown kvmd:kvmd /etc/kvmd/secret/* 
+chown kvmd-vnc:kvmd-vnc /etc/kvmd/secret/vncpasswd
+chmod 660 /etc/kvmd/secret/* 
+chown root:kvmd /dev/kvmd-video-authorized
+chmod 660 /dev/kvmd-video-authorized
+sed -i "s/put_your_docker_host_address_here/$DOCKER_HOST_ADDRESS/g" /etc/kvmd/janus/janus.jcfg
+if [ "$USE_SYSTEMD" == "true" ]; then
+    exec /lib/systemd/systemd --log-level=info --system --log-target=console
+else
+    /usr/bin/kvmd-bootconfig --do-the-thing
+    systemd-tmpfiles --create /usr/lib/tmpfiles.d/kvmd.conf
+    setcap cap_net_raw=+eip /usr/bin/janus
+    setcap 'cap_net_bind_service,cap_net_raw=+eip' $(readlink -f /usr/bin/python)
+    exec /usr/bin/supervisord -c /supervisord.conf
+fi
