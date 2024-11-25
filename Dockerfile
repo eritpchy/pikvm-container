@@ -1,4 +1,4 @@
-FROM archlinux:base-20240825.0.257728 as builder
+FROM archlinux:base-20241117.0.280007 as builder
 RUN pacman-key --init
 RUN --mount=type=cache,target=/var/cache/ \
     pacman -Syyu --noconfirm base-devel git vim
@@ -22,9 +22,9 @@ USER docker_user
 RUN paru --noconfirm -S aur/ustreamer
 
 #######################################################    
-FROM archlinux:base-20240825.0.257728
+FROM archlinux:base-20241117.0.280007
 ENV PIKVM_REPO_KEY=912C773ABBD1B584
-RUN pacman -Sy --noconfirm archlinux-keyring vim systemd supervisor tesseract-data-chi_sim tesseract-data-eng
+RUN pacman -Sy --noconfirm archlinux-keyring vim systemd-sysvcompat supervisor tesseract-data-chi_sim tesseract-data-eng
 
 RUN mkdir -p /etc/gnupg && \
     echo standard-resolver >> /etc/gnupg/dirmngr.conf && \
