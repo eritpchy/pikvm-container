@@ -60,7 +60,7 @@ Run PiKVM inside a Docker container.
 - You can modify `./root/usr/share/kvmd/stream.sh` to add support for other hardware encoders.
 - Refer to the script `./script/test_hardware_coder.sh` for examples and testing.
 - [Build `USB VIDEO CLASS` kernel module for Synology NAS](https://github.com/eritpchy/docker-syno-toolkit)
-
+- Experiencing a black screen in the browser when streaming video on Windows? Please configure your network firewall to allow inbound UDP ports 22222-22444.
 
 ## Latency
 | Codec        | Latency            |

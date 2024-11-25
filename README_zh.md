@@ -60,6 +60,7 @@
 - 你可以修改 `./root/usr/share/kvmd/stream.sh` 以添加对其他硬件编码器的支持。
 - 参考脚本 `./script/test_hardware_coder.sh` 获取示例和测试方法。
 - [为群晖编译 `USB VIDEO CLASS` 内核模块](https://github.com/eritpchy/docker-syno-toolkit)
+- Windows浏览器视频黑屏? 请设置网络防火墙放入站行22222-22444/udp端口。
 
 
 ## 延迟
